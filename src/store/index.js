@@ -1,4 +1,5 @@
 import { createStore } from 'vuex'
+import router from '../router'
 
 export default createStore({
   state: {
@@ -6,6 +7,9 @@ export default createStore({
   getters: {
   },
   mutations: {
+    toogleConfiguratior(state){
+      state.showConfig = !state.showConfig;
+    }
   },
   actions: {
   },
