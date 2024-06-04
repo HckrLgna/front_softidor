@@ -1,5 +1,5 @@
 <template>
-    <div
+  <div
     class="page-header align-items-start min-vh-100"
     style="
       background-image: url('https://images.unsplash.com/photo-1626697556426-8a55a8af4999?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
@@ -15,6 +15,7 @@
                 class="bg-gradient-success shadow-success border-radius-lg py-3 pe-1"
               >
                 <h4 class="text-white font-weight-bolder text-center mt-2 mb-0">
+                  Iniciar Session
                 </h4>
                 <div class="row mt-3">
                   <div class="col-2 text-center ms-auto">
@@ -36,13 +37,19 @@
               </div>
             </div>
             <div class="card-body">
-              <form role="form" class="text-start mt-3">
+              <form
+                @submit.prevent="login(user)"
+                role="form"
+                class="text-start mt-3"
+              >
                 <div class="mb-3">
                   <material-input
                     id="email"
                     type="email"
                     label="Email"
                     name="email"
+                    v-model:value= user.email 
+                     
                   />
                 </div>
                 <div class="mb-3">
@@ -51,6 +58,7 @@
                     type="password"
                     label="Password"
                     name="password"
+                    v-model:value=user.password
                   />
                 </div>
                 <material-switch id="rememberMe" name="rememberMe"
@@ -62,49 +70,52 @@
                     variant="gradient"
                     color="success"
                     fullWidth
-                    > Sign in </material-button
                   >
+                    Sign in
+                  </material-button>
                 </div>
-                
               </form>
+              {{ user }}
             </div>
           </div>
         </div>
       </div>
     </div>
-    
   </div>
 </template>
 <script>
 import MaterialInput from "@/components/MaterialInput.vue";
 import MaterialSwitch from "@/components/MaterialSwitch.vue";
 import MaterialButton from "@/components/MaterialButton.vue";
-import { mapMutations } from 'vuex';
+import { mapMutations, mapActions } from "vuex";
 
 export default {
-    name: 'Sign-in',
-    components:{
-        MaterialInput,
-        MaterialSwitch,
-        MaterialButton
-    },
-    data(){
-      return {
-        email: 'prueba3@prueba.com',
-        password: '',
-        rememberMe: false
-      }
-    },
-    beforeMount(){
-      this.toggleEveryDisplay();
-      this.toggleHideConfig();
-    },
-    beforeUnmount(){
-      this.toggleEveryDisplay();
-      this.toggleHideConfig();
-    },
-    methods:{
-      ...mapMutations(['toggleEveryDisplay', 'toggleHideConfig'])
-    }
-}
+  name: "Sign-in",
+  components: {
+    MaterialInput,
+    MaterialSwitch,
+    MaterialButton,
+  },
+  data() {
+    return {
+      user: {
+        email: "",
+        password: "",
+        rememberMe: false,
+      },
+    };
+  },
+  beforeMount() {
+    this.toggleEveryDisplay();
+    this.toggleHideConfig();
+  },
+  beforeUnmount() {
+    this.toggleEveryDisplay();
+    this.toggleHideConfig();
+  },
+  methods: {
+    ...mapMutations(["toggleEveryDisplay", "toggleHideConfig"]),
+    ...mapActions(['login'])
+  },
+};
 </script>

@@ -1,17 +1,34 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-  </div>
+
+
+
 </template>
 
 <script>
-// @ is an alias to /src
+import Sidenav from "@/examples/Sidenav";
+import { mapActions, mapState } from 'vuex'
+
 import HelloWorld from '@/components/HelloWorld.vue'
 
 export default {
   name: 'HomeView',
   components: {
-    HelloWorld
-  }
+    HelloWorld,
+    Sidenav
+  },
+  methods: {
+    
+  },
+  computed: {
+    ...mapState([
+      "color",
+      "isAbsolute",
+      "isNavFixed",
+      "navbarFixed",
+      "absolute",
+      "showNavbar",
+
+    ])
+  },
 }
 </script>
