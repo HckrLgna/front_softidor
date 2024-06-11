@@ -48,7 +48,7 @@
                     type="email"
                     label="Email"
                     name="email"
-                    v-model:value= user.email 
+                    v-model:value= user.username 
                      
                   />
                 </div>
@@ -99,7 +99,7 @@ export default {
   data() {
     return {
       user: {
-        email: "",
+        username: "",
         password: "",
         rememberMe: false,
       },
