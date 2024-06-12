@@ -32,12 +32,15 @@ export default createStore({
   actions: {
     async login({commit}, user){
       console.log(user);
-      axios.post('http://localhost:8082/auth/login',{
-        'Content-Type': 'application/json',
-        body: JSON.stringify(user)
-      })
-      .then(response => {
-        const resDB =  response.json();
+      try{
+        const res = await fetch('http://localhost:8082/auth/login',{
+          method: 'POST',
+          headers:{
+            'Content-Type': 'application/json',            
+          },
+          body: JSON.stringify(user)
+        })
+        const resDB = await res.json();
         console.log(resDB);
         commit('setToken', resDB.data.token);
         localStorage.setItem('token', resDB.data.token);

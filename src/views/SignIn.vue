@@ -47,7 +47,7 @@
                     id="email"
                     type="email"
                     label="Email"
-                    name="email"
+                    name="username"
                     v-model:value= user.username 
                      
                   />
@@ -101,6 +101,7 @@ export default {
       user: {
         username: "",
         password: ""
+        // rememberMe: false,
       },
     };
   },
