@@ -1,6 +1,5 @@
 import { createStore } from 'vuex'
 import router from '../router'
-import axios from 'axios'
 
 export default createStore({
   state: {
@@ -25,6 +24,14 @@ export default createStore({
     toogleConfiguratior(state){
       state.showConfig = !state.showConfig;
     },
+    toggleEveryDisplay(state) {
+      state.showNavbar = !state.showNavbar;
+      state.showSidenav = !state.showSidenav;
+      state.showFooter = !state.showFooter;
+    },
+    toggleHideConfig(state) {
+      state.hideConfigButton = !state.hideConfigButton;
+    },
     setToken(state, payload){
       state.token = payload;
     }
@@ -41,15 +48,16 @@ export default createStore({
           body: JSON.stringify(user)
         })
         const resDB = await res.json();
-        console.log(resDB);
-        commit('setToken', resDB.data.token);
-        localStorage.setItem('token', resDB.data.token);
-        console.log(response);
-      })
-      .catch(error => {
+        console.log(resDB.token);
+        commit('setToken', resDB.token);
+
+        localStorage.setItem('token', resDB.token);
+        //console.log(resDB);
+        router.push('/dashboard');
+      }
+      catch(error){
         console.log(error);
-      });
-      
+      }
     },
     readToken({ commit }){
       if(localStorage.getItem('token')){

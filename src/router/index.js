@@ -13,7 +13,7 @@ const routes = [
     path: "/",
     name: "/",
     redirect: "/home",
-    meta: { routeProtected: false, requiresSidebar: true  },
+    meta: { routeProtected: true, requiresSidebar: true  },
     children: [
       {
         path: "/dashboard",

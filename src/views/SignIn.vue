@@ -2,7 +2,7 @@
   <div
     class="page-header align-items-start min-vh-100"
     style="
-      background-image: url('https://images.unsplash.com/photo-1626697556426-8a55a8af4999?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+      background-image: url('https://images.unsplash.com/photo-1567777176186-dfa735f1fe20?q=80&w=2067&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
     "
   >
     <span class="mask bg-gradient-dark opacity-6"></span>
@@ -48,8 +48,7 @@
                     type="email"
                     label="Email"
                     name="username"
-                    v-model:value= user.username 
-                     
+                    v-model:value="user.username"
                   />
                 </div>
                 <div class="mb-3">
@@ -58,24 +57,25 @@
                     type="password"
                     label="Password"
                     name="password"
-                    v-model:value=user.password
+                    v-model:value="user.password"
                   />
                 </div>
                 <material-switch id="rememberMe" name="rememberMe"
                   >Remember me</material-switch
                 >
                 <div class="text-center">
-                  <material-button
-                    class="my-4 mb-2"
-                    variant="gradient"
-                    color="success"
-                    fullWidth
-                  >
-                    Sign in
-                  </material-button>
+                    <material-button
+                      class="my-4 mb-2"
+                      variant="gradient"
+                      color="success"
+                      fullWidth
+                    >
+                      Sign in
+                    </material-button>
+                
                 </div>
               </form>
-              {{ user }}
+              
             </div>
           </div>
         </div>
@@ -100,7 +100,7 @@ export default {
     return {
       user: {
         username: "",
-        password: ""
+        password: "",
         // rememberMe: false,
       },
     };
@@ -115,7 +115,7 @@ export default {
   },
   methods: {
     ...mapMutations(["toggleEveryDisplay", "toggleHideConfig"]),
-    ...mapActions(['login'])
+    ...mapActions(["login"]),
   },
 };
 </script>
