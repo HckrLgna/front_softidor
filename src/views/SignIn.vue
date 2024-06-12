@@ -100,8 +100,7 @@ export default {
     return {
       user: {
         username: "",
-        password: "",
-        rememberMe: false,
+        password: ""
       },
     };
   },

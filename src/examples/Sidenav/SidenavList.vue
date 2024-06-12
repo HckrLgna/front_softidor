@@ -58,12 +58,12 @@
           </template>
         </sidenav-collapse>
       </li>
-       
+
       <li class="mt-3 nav-item">
         <h6
           class="text-xs ps-4 text-uppercase font-weight-bolder text-white ms-2"
         >
-         Administracion
+          Administracion
         </h6>
       </li>
       <li class="nav-item">
@@ -79,16 +79,15 @@
           </template>
         </sidenav-collapse>
       </li>
-      
-      <li class="nav-item">
-        <button
-              @click="logout" 
-              class="btn btn-primary">
-            <span> Logout </span>          
-        </button>
+
+      <li class="nav-item mt-3">
+        <div style="text-align: center">
+          <button @click="logout" class="btn btn-primary">
+            <span>Logout</span>
+          </button>
+        </div>
       </li>
     </ul>
-     
   </div>
 </template>
 <script>
@@ -97,20 +96,20 @@ import { mapActions } from "vuex";
 export default {
   name: "SidenavList",
   props: {
-    cardBg: String
+    cardBg: String,
   },
   data() {
     return {
       title: "Soft UI Dashboard PRO",
       controls: "dashboardsExamples",
-      isActive: "active"
+      isActive: "active",
     };
   },
   components: {
-    SidenavCollapse
+    SidenavCollapse,
   },
   methods: {
-    ...mapActions(["logout"])
-  }
+    ...mapActions(["logout"]),
+  },
 };
 </script>

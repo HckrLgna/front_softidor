@@ -1,5 +1,6 @@
 import { createStore } from 'vuex'
 import router from '../router'
+import axios from 'axios'
 
 export default createStore({
   state: {
@@ -31,21 +32,21 @@ export default createStore({
   actions: {
     async login({commit}, user){
       console.log(user);
-      try{
-        const res = await fetch('http://localhost:8082/auth/login',{
-          method: 'POST',
-          headers:{
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(user)
-        })
-        const resDB = await res.json();
+      axios.post('http://localhost:8082/auth/login',{
+        'Content-Type': 'application/json',
+        body: JSON.stringify(user)
+      })
+      .then(response => {
+        const resDB =  response.json();
         console.log(resDB);
         commit('setToken', resDB.data.token);
         localStorage.setItem('token', resDB.data.token);
-      }catch(error){
+        console.log(response);
+      })
+      .catch(error => {
         console.log(error);
-      }
+      });
+      
     },
     readToken({ commit }){
       if(localStorage.getItem('token')){

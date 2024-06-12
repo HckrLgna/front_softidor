@@ -1,19 +1,21 @@
 <template>
   <nav
-    class="shadow-none navbar navbar-main navbar-expand-lg border-radius-xl mt-0'"
+    class="shadow-none navbar navbar-main navbar-expand-lg border-radius-xl"
     v-bind="$attrs"
     id="navbarBlur"
     data-scroll="true"
-    :class=" 'mt-4'"
+    :class="isAbsolute ? 'mt-4' : 'mt-0'"
   >
     <div class="px-3 py-1 container-fluid">
       <breadcrumbs :currentPage="currentRouteName" :color="color" />
       <div
         class="mt-2 collapse navbar-collapse mt-sm-0 me-md-0 me-sm-4"
+        :class="isRTL ? 'px-0' : 'me-sm-4'"
         id="navbar"
       >
         <div
-          class="pe-md-3 d-flex align-items-center ms-md-auto"
+          class="pe-md-3 d-flex align-items-center"
+          :class="isRTL ? 'me-md-auto' : 'ms-md-auto'"
         >
           <material-input id="search" label="Search here" />
         </div>
@@ -24,7 +26,7 @@
               class="px-0 nav-link font-weight-bold lh-1"
               :class="color ? color : 'text-body'"
             >
-              <i class="material-icons me-sm-1">
+              <i class="material-icons" :class="isRTL ? 'ms-sm-2' : 'me-sm-1'">
                 account_circle
               </i>
             </router-link>
@@ -55,8 +57,8 @@
             </a>
           </li>
           <li
-            class="nav-item dropdown d-flex align-items-center pe-2"
-             
+            class="nav-item dropdown d-flex align-items-center"
+            :class="isRTL ? 'ps-2' : 'pe-2'"
           >
             <a
               href="#"
@@ -79,7 +81,7 @@
                   <div class="py-1 d-flex">
                     <div class="my-auto">
                       <img
-                        src="#"
+                        src=" "
                         class="avatar avatar-sm me-3"
                         alt="user image"
                       />
@@ -188,7 +190,7 @@ import Breadcrumbs from "../Breadcrumbs.vue";
 import { mapMutations, mapState } from "vuex";
 
 export default {
-  name: "CustomNavBar",
+  name: "navbar",
   data() {
     return {
       showMenu: false,
