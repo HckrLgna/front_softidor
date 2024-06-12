@@ -47,8 +47,8 @@
                     id="email"
                     type="email"
                     label="Email"
-                    name="email"
-                    v-model:value= user.email 
+                    name="username"
+                    v-model:value= user.username 
                      
                   />
                 </div>
@@ -99,9 +99,9 @@ export default {
   data() {
     return {
       user: {
-        email: "",
-        password: "",
-        rememberMe: false,
+        username: "",
+        password: ""
+        // rememberMe: false,
       },
     };
   },
