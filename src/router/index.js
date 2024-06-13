@@ -7,7 +7,10 @@ import SignIn from "../views/SignIn.vue";
 import SalesView from "@/views/SalesView.vue";
 import ClientsView from "@/views/ClientsView.vue";
 import VehicleView from "@/views/VehicleView.vue";
-import InfrastructureView from "@/views/InfrastructureView.vue";
+import TanquesView from "@/views/TanquesView.vue";
+import PumpsView from "@/views/PumpsView.vue";
+import FuelsView from "@/views/FuelsView.vue";
+
 const routes = [
   {
     path: "/",
@@ -41,9 +44,19 @@ const routes = [
         component: VehicleView,
       },
       {
-        path: "/infrastructure",
-        name: "infrastructure",
-        component: InfrastructureView,
+        path: "/tanques",
+        name: "tanques",
+        component: TanquesView,
+      },
+      {
+        path: "/pumps",
+        name: "pumps",
+        component: PumpsView,
+      },
+      {
+        path: "/fuels",
+        name: "fuels",
+        component: FuelsView,
       },
       {
         path: "/about",

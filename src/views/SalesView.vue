@@ -13,6 +13,135 @@
             </div>
           </div>
           <div class="card-body px-0 pb-2">
+            <div class="table-responsive p-0">
+              <table class="table align-items-center mb-0">
+                <thead>
+                  <tr>
+                    <th
+                      class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
+                    >
+                      Usuario
+                    </th>
+                    <th
+                      class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2"
+                    >
+                      Fecha
+                    </th>
+                    <th
+                      class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
+                    >
+                      Precio
+                    </th>
+                    <th
+                      class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
+                    >
+                      Cantidad
+                    </th>
+                    <th class="text-secondary opacity-7"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr
+                    v-for="ventaCombustible in paginatedItems"
+                    :key="ventaCombustible.id"
+                  >
+                    <td>
+                      <div class="d-flex px-2 py-1">
+                        <div>
+                          <img
+                            src="https://www.clipartmax.com/png/small/171-1717870_stockvader-predicted-cron-for-may-user-profile-icon-png.png"
+                            class="avatar avatar-sm me-3 border-radius-lg"
+                            alt="user1"
+                          />
+                        </div>
+                        <div class="d-flex flex-column justify-content-center">
+                          <h6 class="mb-0 text-sm">
+                            {{ ventaCombustible.usuario_id }}
+                          </h6>
+                          <span
+                            :class="{
+                              badge: true,
+                              'badge-sm': true,
+                              'bg-gradient-success': true,
+                              'bg-gradient-danger': false,
+                            }"
+                            >cliente</span
+                          >
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <p class="text-xs font-weight-bold mb-0">
+                        {{ ventaCombustible.fecha }}
+                      </p>
+                      
+                    </td>
+                    <td class="align-middle text-center text-sm">
+                        <span class="text-secondary text-xs font-weight-bold">{{
+                        ventaCombustible.precio
+                      }}</span>
+                    </td>
+                    <td class="align-middle text-center">
+                      <span class="text-secondary text-xs font-weight-bold">{{
+                        ventaCombustible.cantidad
+                      }}</span>
+                    </td>
+                    <td class="align-middle">
+                      <a
+                        href="javascript:;"
+                        class="text-secondary font-weight-bold text-xs"
+                        data-toggle="tooltip"
+                        data-original-title="Edit user"
+                      >
+                       Ver | Editar
+                      </a>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <nav class="p-3">
+                <button
+                  @click="prevPage"
+                  :disabled="currentPage === 1"
+                  :class="{
+                    badge: true,
+                    'badge-sm': true,
+                    'bg-gradient-success': currentPage !== 1,
+                    'bg-gradient-secondary': currentPage === 1,
+                  }"
+                >
+                  Anterior
+                </button>
+                <span class="mx-3">{{ currentPage }} / {{ pageCount }}</span>
+                <button
+                  @click="nextPage"
+                  :disabled="currentPage === pageCount"
+                  :class="{
+                    badge: true,
+                    'badge-sm': true,
+                    'bg-gradient-secondary': currentPage === pageCount,
+                    'bg-gradient-success': currentPage !== pageCount,
+                  }"
+                >
+                  Siguiente
+                </button>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="card my-4">
+          <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+            <div
+              class="bg-gradient-success shadow-success border-radius-lg pt-4 pb-3"
+            >
+              <h6 class="text-white text-capitalize ps-3">
+                Ventas de Productos
+              </h6>
+            </div>
+          </div>
+          <div class="card-body px-0 pb-2">
             <material-button
               class="mx-3 my-2 color-white"
               color="dark"
@@ -34,7 +163,7 @@
                 <div class="modal-content">
                   <div class="modal-header">
                     <h1 class="modal-title fs-5" id="exampleModalLabel">
-                      Crear producto
+                      Registrar detalle de venta
                     </h1>
                     <button
                       type="button"
@@ -44,7 +173,7 @@
                     ></button>
                   </div>
                   <div class="modal-body">
-                    <form @submit.prevent="crearProducto">
+                    <form @submit.prevent="crearVentaCombustible">
                       <div class="mb-3">
                         <label for="nombre" class="form-label"
                           >Nombre del producto</label
@@ -110,7 +239,7 @@
                     <th
                       class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
                     >
-                      Id Venta
+                      Usuario
                     </th>
                     <th
                       class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2"
@@ -132,50 +261,48 @@
                 </thead>
                 <tbody>
                   <tr
-                    v-for="ventaCombustible in paginatedItems"
-                    :key="ventaCombustible.id"
+                    v-for="ventaProductos in paginatedItems"
+                    :key="ventaProductos.id"
                   >
                     <td>
                       <div class="d-flex px-2 py-1">
                         <div>
                           <img
-                            src=" "
+                            src="https://www.clipartmax.com/png/small/171-1717870_stockvader-predicted-cron-for-may-user-profile-icon-png.png"
                             class="avatar avatar-sm me-3 border-radius-lg"
                             alt="user1"
                           />
                         </div>
                         <div class="d-flex flex-column justify-content-center">
                           <h6 class="mb-0 text-sm">
-                            {{ ventaCombustible.nombre }}
+                            {{ ventaProductos.usuario_id }}
                           </h6>
-                          <p class="text-xs text-secondary mb-0">
-                            {{ ventaCombustible.email }}
-                          </p>
+                          <span
+                            :class="{
+                              badge: true,
+                              'badge-sm': true,
+                              'bg-gradient-success': true,
+                              'bg-gradient-danger': false,
+                            }"
+                            >cliente</span
+                          >
                         </div>
                       </div>
                     </td>
                     <td>
                       <p class="text-xs font-weight-bold mb-0">
-                        {{ ventaCombustible.funcion }}
+                        {{ ventaCombustible.fecha }}
                       </p>
-                      <p class="text-xs text-secondary mb-0">
-                        {{ ventaCombustible.cargo }}
-                      </p>
+                      
                     </td>
                     <td class="align-middle text-center text-sm">
-                      <span
-                        :class="{
-                          badge: true,
-                          'badge-sm': true,
-                          'bg-gradient-success': cliente.estatus,
-                          'bg-gradient-danger': !cliente.estatus,
-                        }"
-                        >{{ cliente.estatus ? "ACtivo" : "Inactivo" }}</span
-                      >
+                        <span class="text-secondary text-xs font-weight-bold">{{
+                        ventaCombustible.precio
+                      }}</span>
                     </td>
                     <td class="align-middle text-center">
                       <span class="text-secondary text-xs font-weight-bold">{{
-                        ventaCombustible.fecha_inicio
+                        ventaCombustible.cantidad
                       }}</span>
                     </td>
                     <td class="align-middle">
@@ -185,7 +312,7 @@
                         data-toggle="tooltip"
                         data-original-title="Edit user"
                       >
-                        Edit
+                       Ver | Editar
                       </a>
                     </td>
                   </tr>
@@ -234,7 +361,8 @@ export default {
   },
   data() {
     return {
-      ventas: [], // Aquí almacenaremos los productos obtenidos de la API
+      ventaCombustible: [], // Aquí almacenaremos los productos obtenidos de la API
+      ventaProductos: [], // Aquí almacenaremos los productos obtenidos de la API
       itemsPerPage: 5, // Número de elementos por página
       currentPage: 1, // Página actual
       nuevoProducto: {
@@ -248,22 +376,30 @@ export default {
   },
   computed: {
     pageCount() {
-      return Math.ceil(this.ventas.length / this.itemsPerPage);
+      return Math.ceil(this.ventaCombustible.length / this.itemsPerPage);
     },
     paginatedItems() {
       const startIndex = (this.currentPage - 1) * this.itemsPerPage;
       const endIndex = startIndex + this.itemsPerPage;
-      return this.ventas.slice(startIndex, endIndex);
+      return this.ventaCombustible.slice(startIndex, endIndex);
     },
   },
   async mounted() {
     try {
-      const res = await fetch("http://127.0.0.1:5000/api/ventacombustibles", {
-        'Access-Control-Allow-Origin': '*',
-        method: 'GET',
+      const resCombustible = await fetch("http://127.0.0.1:5000/api/ventacombustibles", {
+        method: "GET",
       });
-      const data = await res.json();
-      console.log(data);
+      const dataCombustible = await resCombustible.json();
+      this.ventaCombustible = dataCombustible;
+      console.log(this.ventaCombustible);
+
+      const resProducto = await fetch("http://127.0.0.1:5000/api/ventaproductos/", {
+        method: "GET",
+      });
+      const dataProducto = await resProducto.json();
+      this.ventaProductos = dataProducto;
+      console.log(this.ventaCombustible);
+
     } catch (error) {
       console.log(error);
     }
@@ -278,9 +414,6 @@ export default {
       if (this.currentPage > 1) {
         this.currentPage--;
       }
-    },
-    obtenerVentas() {
-      console.log("Obteniendo ventas");
     },
   },
 };

@@ -71,15 +71,40 @@
           url="#"
           :aria-controls="''"
           v-bind:collapse="false"
-          collapseRef="infrastructure"
-          navText="Infraestructura"
+          collapseRef="tanques"
+          navText="Tanques"
         >
           <template v-slot:icon>
             <i class="material-icons-round opacity-10 fs-5">person</i>
           </template>
         </sidenav-collapse>
       </li>
-
+      <li class="nav-item">
+        <sidenav-collapse
+          url="#"
+          :aria-controls="''"
+          v-bind:collapse="false"
+          collapseRef="pumps"
+          navText="Bombas"
+        >
+          <template v-slot:icon>
+            <i class="material-icons-round opacity-10 fs-5">person</i>
+          </template>
+        </sidenav-collapse>
+      </li>
+      <li class="nav-item">
+        <sidenav-collapse
+          url="#"
+          :aria-controls="''"
+          v-bind:collapse="false"
+          collapseRef="fuels"
+          navText="Combustible"
+        >
+          <template v-slot:icon>
+            <i class="material-icons-round opacity-10 fs-5">person</i>
+          </template>
+        </sidenav-collapse>
+      </li>
       <li class="nav-item mt-3">
         <div style="text-align: center">
           <button @click="logout" class="btn btn-primary">

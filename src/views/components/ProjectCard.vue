@@ -23,7 +23,7 @@
             >
               <li>
                 <a class="dropdown-item border-radius-md" href="javascript:;">
-                  Action
+                  Crear
                 </a>
               </li>
               <li>
@@ -60,65 +60,39 @@
             </tr>
           </thead>
           <tbody>
-            <tr
-              v-for="(
-                {
-                   
-                  title,
-                  members,
-                  budget,
-                  progress: { percentage, color },
-                },
-                index
-              ) of projects"
-              :key="index"
-            >
+            <tr v-for="(clients, index) in clients" :key="index">
               <td>
                 <div class="d-flex px-2 py-1">
-                   
                   <div class="d-flex flex-column justify-content-center">
-                    <h6 class="mb-0 text-sm">{{ title }}</h6>
+                    <h6 class="mb-0 text-sm">{{ clients.nombre }}</h6>
                   </div>
                 </div>
               </td>
               <td>
-                <div class="avatar-group mt-2">
-                  <a
-                    v-for="(member, index) of members"
-                    :key="index"
-                    href="javascript:;"
-                    class="avatar avatar-xs rounded-circle"
-                    data-bs-toggle="tooltip"
-                    data-bs-placement="bottom"
-                    title=""
-                    data-bs-original-title=""
-                  >
-                    <img :src="member" alt="Team member" />
-                  </a>
+                <div class="d-flex px-2 py-1">
+                  <div class="d-flex flex-column justify-content-center">
+                    <h6 class="mb-0 text-sm">{{ clients.correo }}</h6>
+                  </div>
                 </div>
               </td>
               <td class="align-middle text-center text-sm">
-                <span class="text-xs font-weight-bold"> {{ budget }} </span>
+                <div>
+                  <span
+                    v-for="(role , roleIndex) in clients.roles"
+                    :key="roleIndex"
+                    class="text-xs font-weight-wide"
+                    >{{ role }}
+                  </span>
+                </div>
               </td>
-              <td class="align-middle d-flex justify-content-end">
-                <div class="progress-wrapper w-75 mx-auto">
-                  <div class="progress-info">
-                    <div class="progress-percentage">
-                      <span class="text-xs font-weight-bold"
-                        >{{ percentage }}%
-                      </span>
-                    </div>
-                  </div>
-                  <div class="progress">
-                    <div
-                      class="progress-bar"
-                      :class="`w-${percentage}  bg-gradient-${color}`"
-                      role="progressbar"
-                      :aria-valuenow="percentage"
-                      aria-valuemin="0"
-                      aria-valuemax="100"
-                    ></div>
-                  </div>
+              <td class="align-middle text-center text-sm">
+                <div>
+                  <span
+                    v-for="(permission , permissionIndex) in clients.permisos"
+                    :key="permissionIndex"
+                    class="text-xs font-weight-wide"
+                    >{{ permission }} | 
+                  </span>
                 </div>
               </td>
             </tr>
@@ -145,19 +119,13 @@ export default {
       type: Array,
       required: true,
     },
-    projects: {
+    clients: {
       type: Array,
       required: true,
-      logo: String,
-      title: String,
-      members: Array,
-      budget: String,
-      progress: {
-        type: Object,
-        percentage: Number,
-        color: String,
-      },
     },
+  },
+  mounted() {
+    console.log(this.clients);
   },
 };
 </script>

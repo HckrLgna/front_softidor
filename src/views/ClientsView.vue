@@ -11,52 +11,7 @@
             </div>
           </div>
           <div class="card-body px-0 pb-2">
-            <material-button
-              class="mx-3 my-2 color-white"
-              color="dark"
-              size="sm"
-              variant="outline"
-              data-bs-toggle="modal"
-              data-bs-target="#exampleModal"
-              >Crear nuevo</material-button
-            >
-            <!-- Modal -->
-            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h1 class="modal-title fs-5" id="exampleModalLabel">Crear producto</h1>
-                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body ">
-                      <form @submit.prevent="crearProducto">
-                        <div class="mb-3">
-                          <label for="nombre" class="form-label">Nombre del producto</label>
-                          <input type="text" class="form-control" v-model="nuevoProducto.nombre" required>
-                        </div>
-                        <div class="mb-3">
-                          <label for="descripcion" class="form-label">Descripción</label>
-                          <textarea class="form-control" v-model="nuevoProducto.descripcion"></textarea>
-                        </div>
-                        <div class="mb-3">
-                          <label for="fecha_creacion" class="form-label">Fecha de caducidad </label>
-                          <input type="date" class="form-control" v-model="nuevoProducto.fecha_caducidad" required>
-                        </div>
-                        <div class="mb-3">
-                          <label for="version" class="form-label">precio</label>
-                          <input type="text" class="form-control" v-model="nuevoProducto.precio_unitario" required>
-                        </div>
-                         
-                        <button type="submit" class="btn btn-primary">Guardar</button>
-                      </form>
-                    </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                      
-                    </div>
-                  </div>
-                </div>
-              </div>
+             
             <div class="table-responsive p-0">
               <table class="table align-items-center mb-0">
                 <thead>
@@ -76,12 +31,8 @@
                     >
                       Status
                     </th>
-                    <th
-                      class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
-                    >
-                      Rol
-                    </th>
-                    <th class="text-secondary opacity-7"></th>
+                     
+                    <th class="text-secondary opacity-7">Opciones</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -90,43 +41,35 @@
                       <div class="d-flex px-2 py-1">
                         <div>
                           <img
-                            src=" "
+                            src="https://www.clipartmax.com/png/small/171-1717870_stockvader-predicted-cron-for-may-user-profile-icon-png.png"
                             class="avatar avatar-sm me-3 border-radius-lg"
                             alt="user1"
                           />
                         </div>
                         <div class="d-flex flex-column justify-content-center">
-                          <h6 class="mb-0 text-sm">{{ cliente.nombre }}</h6>
-                          <p class="text-xs text-secondary mb-0">
-                            {{ cliente.email }}
-                          </p>
+                          <h6 class="mb-0 text-sm">{{ cliente.name }}</h6>
+                           
                         </div>
                       </div>
                     </td>
                     <td>
                       <p class="text-xs font-weight-bold mb-0">
-                        {{ cliente.funcion }}
+                        {{ cliente.email }}
                       </p>
-                      <p class="text-xs text-secondary mb-0">
-                        {{ cliente.cargo }}
-                      </p>
+                       
                     </td>
                     <td class="align-middle text-center text-sm">
                       <span
                         :class="{
                           badge: true,
                           'badge-sm': true,
-                          'bg-gradient-success': cliente.estatus,
-                          'bg-gradient-danger': !cliente.estatus,
+                          'bg-gradient-success': true,
+                          'bg-gradient-danger': false,
                         }"
-                        >{{ cliente.estatus ? "ACtivo" : "Inactivo" }}</span
+                        >{{ "ACtivo" }}</span
                       >
                     </td>
-                    <td class="align-middle text-center">
-                      <span class="text-secondary text-xs font-weight-bold">{{
-                        cliente.fecha_inicio
-                      }}</span>
-                    </td>
+                     
                     <td class="align-middle">
                       <a
                         href="javascript:;"
@@ -134,7 +77,7 @@
                         data-toggle="tooltip"
                         data-original-title="Edit user"
                       >
-                        Edit
+                        Editar | Eliminar
                       </a>
                     </td>
                   </tr>
@@ -177,26 +120,55 @@
 </template>
 
 <script>
-  import MaterialButton from "@/components/MaterialButton.vue";
-  export default{
-    components: {
-      MaterialButton,
+import MaterialButton from "@/components/MaterialButton.vue";
+export default {
+  components: {
+    MaterialButton,
+  },
+  data() {
+    return {
+      listaClientes: [], // Aquí almacenaremos los productos obtenidos de la API
+      itemsPerPage: 5, // Número de elementos por página
+      currentPage: 1, // Página actual
+       
+    };
+  },
+  computed: {
+    pageCount() {
+      return Math.ceil(this.listaClientes.length / this.itemsPerPage);
     },
-    data() {
-      return {
-        productos: [],
-        clientes: [], // Aquí almacenaremos los productos obtenidos de la API
-        itemsPerPage: 5, // Número de elementos por página
-        currentPage: 1, // Página actual
-        nuevoProducto: {
-          nombre: "",
-          descripcion: "",
-          fecha_caducidad: "",
-          precio_unitario: 0,
-          activo: true,
-        },
-      };
+    paginatedItems() {
+      const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+      const endIndex = startIndex + this.itemsPerPage;
+      return this.listaClientes.slice(startIndex, endIndex);
     },
-     
-  }
+  },
+  async mounted() {
+    try {
+      const res = await fetch("http://localhost:8090/api/user/all", {
+        method: 'GET',
+      });
+      const data = await res.json();
+      this.listaClientes = data.filter(cliente => cliente.roles.includes("CLIENT"))
+      console.log(this.listaClientes);
+    } catch (error) {
+      console.log(error);
+    }
+  },
+  methods: {
+    nextPage() {
+      if (this.currentPage < this.pageCount) {
+        this.currentPage++;
+      }
+    },
+    prevPage() {
+      if (this.currentPage > 1) {
+        this.currentPage--;
+      }
+    },
+    obtenerVentas() {
+      console.log("Obteniendo ventas");
+    },
+  },
+};
 </script>
