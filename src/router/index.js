@@ -1,8 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import store from "../store";
 
-import Dashboard from "../views/Dashboard.vue";
-import HomeView from "../views/HomeView.vue";
 import SignIn from "../views/SignIn.vue";
 import SalesView from "@/views/SalesView.vue";
 import ClientsView from "@/views/ClientsView.vue";
@@ -10,23 +8,19 @@ import VehicleView from "@/views/VehicleView.vue";
 import TanquesView from "@/views/TanquesView.vue";
 import PumpsView from "@/views/PumpsView.vue";
 import FuelsView from "@/views/FuelsView.vue";
+import Dashboard from "@/views/Dashboard.vue";
 
 const routes = [
   {
     path: "/",
     name: "/",
-    redirect: "/home",
+    redirect: "/dashboard",
     meta: { routeProtected: true, requiresSidebar: true  },
     children: [
       {
         path: "/dashboard",
         name: "dashboard",
         component: Dashboard,
-      },
-      {
-        path: "/home",
-        name: "home",
-        component: HomeView,
       },
       {
         path: "/sales",

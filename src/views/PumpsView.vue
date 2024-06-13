@@ -135,7 +135,7 @@
     },
     async mounted() {
       try{
-        const res = await fetch("http://localhost:8090/api/bomba/all",{
+        const res = await fetch("http://34.176.175.157:80/api/bomba/all",{
           method: "GET",
           headers: {
             "Content-Type": "application/json",

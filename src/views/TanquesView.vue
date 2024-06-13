@@ -301,7 +301,7 @@ export default {
     },
     async crearTanque(){
       try{
-        const res = await fetch("http://localhost:8090/api/tanque",{
+        const res = await fetch("http://34.176.175.157:80/api/tanque",{
           method: "POST",
           headers: {
             "Content-Type": "application/json",
