@@ -1,6 +1,5 @@
-module.exports = {
-  publicPath: process.env.NODE_ENV === 'production' ? '/' : '/',
-  devServer: {
-    historyApiFallback: true
-  }
-};
+import { defineConfig } from '@vue/cli-service';
+export default defineConfig({
+  transpileDependencies: true,
+  publicPath: '/'
+});
