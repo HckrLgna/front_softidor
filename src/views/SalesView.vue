@@ -116,7 +116,7 @@
                   </tr>
                 </tbody>
               </table>
-              <nav v-if="ventaProductos.length > 0" class="p-3">
+              <nav v-if="ventaCombustible.length > 0" class="p-3">
                 <button
                   @click="prevPage"
                   :disabled="currentPage === 1"

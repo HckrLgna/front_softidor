@@ -216,6 +216,7 @@ export default {
       newProduct: {
         name: "",
         purchase_price: "",
+        status: 1,
         sale_price: "",
       },
       alertaVisible: false,

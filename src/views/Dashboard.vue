@@ -288,9 +288,9 @@ export default {
       listFuelProfit: [],
       listMonthFuelProfit: [],
       startDateFuelProfit: "2023-05-01",
-      endDateFuelProfit: "2023-06-18",
+      endDateFuelProfit: "2023-08-18",
       minDateFuelProfit: "2023-05-01",
-      maxDateFuelProfit: "2024-06-18",
+      maxDateFuelProfit: "2024-08-18",
       chartKeyFuelProfit: 0,
       
       totalProductProfit: 0,
