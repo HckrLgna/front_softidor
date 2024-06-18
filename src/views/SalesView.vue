@@ -1,5 +1,14 @@
 <template>
   <div class="container-fluid py-4">
+    <MaterialAlert
+      v-if="alertVisible"
+      :color="alertColor"
+      :icon="alertIcono"
+      :dismissible="true"
+      @dismissed="alertVisible = false"
+    >
+      {{ alertContent }}
+    </MaterialAlert>
     <div class="row">
       <div class="col-12">
         <div class="card my-4">
@@ -40,7 +49,7 @@
                     <th class="text-secondary opacity-7"></th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody v-if="ventaCombustible.length > 0">
                   <tr
                     v-for="ventaCombustible in paginatedItems"
                     :key="ventaCombustible.id"
@@ -74,10 +83,9 @@
                       <p class="text-xs font-weight-bold mb-0">
                         {{ ventaCombustible.fecha }}
                       </p>
-                      
                     </td>
                     <td class="align-middle text-center text-sm">
-                        <span class="text-secondary text-xs font-weight-bold">{{
+                      <span class="text-secondary text-xs font-weight-bold">{{
                         ventaCombustible.precio
                       }}</span>
                     </td>
@@ -93,13 +101,22 @@
                         data-toggle="tooltip"
                         data-original-title="Edit user"
                       >
-                       Ver | Editar
+                        Ver | Editar
                       </a>
                     </td>
                   </tr>
                 </tbody>
+                <tbody v-else>
+                  <tr>
+                    <td colspan="5" class="text-center">
+                      <p class="text-secondary">
+                        No hay ventas de combustible disponible
+                      </p>
+                    </td>
+                  </tr>
+                </tbody>
               </table>
-              <nav class="p-3">
+              <nav v-if="ventaCombustible.length > 0" class="p-3">
                 <button
                   @click="prevPage"
                   :disabled="currentPage === 1"
@@ -259,7 +276,7 @@
                     <th class="text-secondary opacity-7"></th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody v-if="ventaCombustible.length > 0">
                   <tr
                     v-for="ventaProductos in paginatedItems"
                     :key="ventaProductos.id"
@@ -293,10 +310,9 @@
                       <p class="text-xs font-weight-bold mb-0">
                         {{ ventaCombustible.fecha }}
                       </p>
-                      
                     </td>
                     <td class="align-middle text-center text-sm">
-                        <span class="text-secondary text-xs font-weight-bold">{{
+                      <span class="text-secondary text-xs font-weight-bold">{{
                         ventaCombustible.precio
                       }}</span>
                     </td>
@@ -312,13 +328,22 @@
                         data-toggle="tooltip"
                         data-original-title="Edit user"
                       >
-                       Ver | Editar
+                        Ver | Editar
                       </a>
                     </td>
                   </tr>
                 </tbody>
+                <tbody v-else>
+                  <tr>
+                    <td colspan="5" class="text-center">
+                      <p class="text-secondary">
+                        No hay ventas de productos disponible
+                      </p>
+                    </td>
+                  </tr>
+                </tbody>
               </table>
-              <nav class="p-3">
+              <nav v-if="ventaCombustible.length > 0" class="p-3">
                 <button
                   @click="prevPage"
                   :disabled="currentPage === 1"
@@ -355,9 +380,11 @@
 
 <script>
 import MaterialButton from "@/components/MaterialButton.vue";
+import MaterialAlert from "@/components/MaterialAlert.vue";
 export default {
   components: {
     MaterialButton,
+    MaterialAlert
   },
   data() {
     return {
@@ -372,6 +399,11 @@ export default {
         cantidad: 0,
         activo: true,
       },
+      alertVisible: false,
+      alertColor: "success",
+      alertIcono: "check",
+      alertContent: "",
+
     };
   },
   computed: {
@@ -386,20 +418,33 @@ export default {
   },
   async mounted() {
     try {
-      const resCombustible = await fetch("http://127.0.0.1:5000/api/ventacombustibles", {
-        method: "GET",
-      });
+      const resCombustible = await fetch(
+        "http://127.0.0.1:5000/api/ventacombustibles",
+        {
+          method: "GET",
+        }
+      );
       const dataCombustible = await resCombustible.json();
       this.ventaCombustible = dataCombustible;
       console.log(this.ventaCombustible);
 
-      const resProducto = await fetch("http://127.0.0.1:5000/api/ventaproductos/", {
-        method: "GET",
-      });
+      const resProducto = await fetch(
+        "http://127.0.0.1:5000/api/ventaproductos/",
+        {
+          method: "GET",
+        }
+      );
+      if (resCombustible.status === 200) {
+          this.showAlert("success", "check", "Microservicio en linea");
+      } else {
+        this.alertVisible = true;
+        this.alertColor = "danger";
+        this.alertIcono = "error";
+        this.alertContent = "Error al conectar al microservicio: ventas Error - "+ resCombustible.status;
+      }
       const dataProducto = await resProducto.json();
       this.ventaProductos = dataProducto;
       console.log(this.ventaCombustible);
-
     } catch (error) {
       console.log(error);
     }
@@ -414,6 +459,15 @@ export default {
       if (this.currentPage > 1) {
         this.currentPage--;
       }
+    },
+    showAlert(color, icon, content) {
+      this.alertVisible = true;
+      this.alertColor = color;
+      this.alertIcono = icon;
+      this.alertContent = content;
+      setTimeout(() => {
+        this.alertaVisible = false;
+      }, 5000);
     },
   },
 };

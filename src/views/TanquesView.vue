@@ -69,7 +69,7 @@
                             type="number"
                             label="Capacidad Maxima"
                             name="cap_max"
-                            v-model="nuevoTanque.cap_max"
+                            v-model:value="nuevoTanque.cap_max"
                           />
                         </div>
                         <material-input
@@ -77,19 +77,28 @@
                           type="number"
                           label="Capacidad Minima"
                           name="cap_min"
-                          v-model="nuevoTanque.cap_min"
+                          v-model:value="nuevoTanque.cap_min"
                         />
-                        <div class="mb-3">
+
+                        <div class="mt-3 mb-3 p-2">
+                          <label for="selectFuel" class="form-label"
+                            >Tipo de combustible</label
+                          >
                           <select
+                            id="selectFuel"
                             class="form-select"
-                            aria-label="Default select example"
+                            aria-label="Seleccione un combustible"
                             name="fuel"
                             v-model="nuevoTanque.fuel"
                           >
                             <option selected>Selecciona un combustible</option>
-                            <option value="Gasolina">Gasolina</option>
-                            <option value="Diesel">Diesel</option>
-                            <option value="Gas">Gas</option>
+                            <option
+                              v-for="fuel in arrayFuels"
+                              :key="fuel.id"
+                              :value="fuel.name"
+                            >
+                              {{ fuel.name }}
+                            </option>
                           </select>
                         </div>
 
@@ -97,7 +106,17 @@
                           Guardar
                         </button>
                       </form>
+                      <!-- Componente de alerta -->
                     </div>
+                    <MaterialAlert
+                      v-if="alertaVisible"
+                      :color="alertaColor"
+                      :icon="alertaIcono"
+                      :dismissible="true"
+                      @dismissed="alertaVisible = false"
+                    >
+                      {{ alertaMensaje }}
+                    </MaterialAlert>
                   </div>
                 </div>
               </div>
@@ -156,9 +175,7 @@
                       <div class="d-flex px-2 py-1">
                         <div class="d-flex flex-column justify-content-center">
                           <h6 class="mb-0 text-sm">{{ tanques.name }}</h6>
-                          <p class="text-xs text-secondary mb-0">
-                            {{}}
-                          </p>
+                          <p class="text-xs text-secondary mb-0">{{}}</p>
                         </div>
                       </div>
                     </td>
@@ -242,11 +259,15 @@
 <script>
 import MaterialButton from "@/components/MaterialButton.vue";
 import MaterialInput from "@/components/MaterialInput.vue";
+import MaterialAlert from "@/components/MaterialAlert.vue";
+import { mapGetters, mapActions } from "vuex";
+
 export default {
-  name: "tables",
+  name: "tanks",
   components: {
     MaterialButton,
     MaterialInput,
+    MaterialAlert,
   },
   data() {
     return {
@@ -260,7 +281,14 @@ export default {
         cap_min: 0,
         fuel: "",
       },
+      alertaVisible: false,
+      alertaColor: "success",
+      alertaIcono: "fas fa-check",
+      alertaMensaje: "",
     };
+  },
+  created() {
+    this.fetchFuels();
   },
   computed: {
     pageCount() {
@@ -271,20 +299,27 @@ export default {
       const endIndex = startIndex + this.itemsPerPage;
       return this.tanques.slice(startIndex, endIndex);
     },
+    ...mapGetters(["getFuels"]),
+    arrayFuels() {
+      return this.getFuels;
+    },
   },
   async mounted() {
-    try{
-      const res = await fetch("http://localhost:8090/api/tanque/all",{
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + localStorage.getItem("token"),
-        },
-      });
-      const data = await res.json();
-      console.log(data);
-      this.tanques = data;
-    }catch{
+    try {
+      const res = await fetch("http://localhost:8090/graphql",{
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+          body: JSON.stringify({
+            query: "query ListarTanques{ getAllTank{ id name cap_max fuel }}"
+          })
+        });
+        const data = await res.json();
+        console.log(data);
+        this.tanques = data["data"]["getAllTank"];
+    } catch {
       console.log(error);
     }
   },
@@ -299,21 +334,50 @@ export default {
         this.currentPage--;
       }
     },
-    async crearTanque(){
-      try{
-        const res = await fetch("http://34.176.175.157:80/api/tanque",{
+    async crearTanque() {
+      try {
+        const res = await fetch("http://localhost:8090/graphql", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-              Authorization: "Bearer " + localStorage.getItem("token"),
+            Authorization: "Bearer " + localStorage.getItem("token"),
           },
-          body: JSON.stringify(this.nuevoTanque),
-        })
-        route.push("/tanques")
-    }catch(error){
-      console.log(error);
-    }
-  }
+          body: JSON.stringify({
+            query: `mutation GuardarTanque{ saveTank(tankDto : { name : "${this.nuevoTanque.name}", fuel_quantity : ${this.nuevoTanque.fuel_quantity}, cap_max: ${this.nuevoTanque.cap_max}, cap_min : ${this.nuevoTanque.cap_min}, fuel: "${this.nuevoTanque.fuel}" }){ id name fuel_quantity cap_max cap_min fuel }}`
+          }),
+        });
+
+        console.log(res);
+        if (res.ok) {
+          this.mostrarAlerta(
+            "Registro guardado exitosamente",
+            "success",
+            "fas fa-check"
+          );
+          this.$router.push("/tanques");
+        } else {
+          this.mostrarAlerta(
+            "Error al guardar el registro",
+            "danger",
+            "fas fa-times"
+          );
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    mostrarAlerta(mensaje, color, icono) {
+      this.alertaMensaje = mensaje;
+      this.alertaColor = color;
+      this.alertaIcono = icono;
+      this.alertaVisible = true;
+
+      // Ocultar la alerta después de 5 segundos
+      setTimeout(() => {
+        this.alertaVisible = false;
+      }, 5000);
+    },
+    ...mapActions(["fetchFuels"]),
   },
-}
+};
 </script>

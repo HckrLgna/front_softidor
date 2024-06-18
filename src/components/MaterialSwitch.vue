@@ -8,7 +8,7 @@
             :name="name"
             :checked="checked"
         />
-        <label class="form-check-label ms-3" :class="labelCass" :for="id">
+        <label class="form-check-label ms-3" :class="labelClass" :for="id">
             <slot></slot>
         </label>
         

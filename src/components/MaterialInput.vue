@@ -77,9 +77,6 @@
     mounted() {
       setMaterialInput();
     },
-    data(){
-        
-    },
     methods: {
       getClasses: (size) => {
         let sizeValue;

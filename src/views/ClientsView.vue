@@ -150,7 +150,6 @@ export default {
       });
       const data = await res.json();
       this.listaClientes = data.filter(cliente => cliente.roles.includes("CLIENT"))
-      console.log(this.listaClientes);
     } catch (error) {
       console.log(error);
     }
@@ -167,7 +166,6 @@ export default {
       }
     },
     obtenerVentas() {
-      console.log("Obteniendo ventas");
     },
   },
 };
