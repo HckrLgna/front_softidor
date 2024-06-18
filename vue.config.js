@@ -1,5 +1,8 @@
-import { defineConfig } from '@vue/cli-service';
-export default defineConfig({
+
+const { defineConfig } = require('@vue/cli-service');
+
+module.exports = defineConfig({
+  // Configuración de Vue CLI aquí.
   transpileDependencies: true,
   publicPath: '/'
 });

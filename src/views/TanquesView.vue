@@ -306,7 +306,7 @@ export default {
   },
   async mounted() {
     try {
-      const res = await fetch("http://localhost:8090/graphql",{
+      const res = await fetch("http://34.176.196.5/graphql",{
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -319,7 +319,7 @@ export default {
         const data = await res.json();
         console.log(data);
         this.tanques = data["data"]["getAllTank"];
-    } catch {
+    } catch(error) {
       console.log(error);
     }
   },
@@ -336,7 +336,7 @@ export default {
     },
     async crearTanque() {
       try {
-        const res = await fetch("http://localhost:8090/graphql", {
+        const res = await fetch("http://34.176.196.5/graphql", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

@@ -145,7 +145,7 @@ export default {
   },
   async mounted() {
     try {
-      const res = await fetch("http://localhost:8090/api/user/all", {
+      const res = await fetch("http://34.176.196.5/api/user/all", {
         method: 'GET',
       });
       const data = await res.json();

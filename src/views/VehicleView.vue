@@ -156,15 +156,13 @@
                     </td>
                     <td>
                       <p class="text-xs font-weight-bold mb-0">
-                        {{ listaVehiculos.number_plate }}
+                        {{ listaVehiculos.licensePlate }}
                       </p>
-                      <p class="text-xs text-secondary mb-0">
-                        {{ listaVehiculos.cargo }}
-                      </p>
+                      
                     </td>
                     <td class="align-middle text-center text-sm">
                       <span class="text-secondary text-xs font-weight-bold">{{
-                        listaVehiculos.fuel_type
+                        listaVehiculos.typeCombustible
                       }}</span>
                     </td>
                     <td class="align-middle text-center">
@@ -195,9 +193,7 @@
                 <tbody v-else>
                   <tr>
                     <td colspan="5" class="text-center">
-                      <p class="text-secondary">
-                        No hay vehiculos disponibles
-                      </p>
+                      <p class="text-secondary">No hay vehiculos disponibles</p>
                     </td>
                   </tr>
                 </tbody>
@@ -275,20 +271,42 @@ export default {
   },
   async mounted() {
     try {
-      const res = await fetch("http://localhost:8090/api/vehiculo/all", {
-        method: "GET",
-      });
+      const res = await fetch(
+        "https://inspiring-cooperation-production.up.railway.app/api/vehicles",
+        {
+          method: "GET",
+        }
+      );
       const data = await res.json();
-      if (data.error){
+      console.log("Respuesta de la API:", data);
+
+      Object.keys(data).forEach((key) => {
+        const vehicleData = data[key];
+        // Agregar el vehículo a this.listaVehiculos
+        this.listaVehiculos.push({
+          _id: vehicleData._id,
+          brand: vehicleData.brand,
+          model: vehicleData.model,
+          typeCombustible: vehicleData.typeCombustible,
+          licensePlate: vehicleData.licensePlate,
+          pathImage: vehicleData.pathImage,
+          status: vehicleData.status,
+          // Agregar otras propiedades según sea necesario
+        });
+      });
+
+      console.log("vechicels", data);
+      if (data.error) {
         this.alertVisible = true;
         this.alertColor = "danger";
         this.alertIcono = "error";
-        this.alertContent = "Error al conectar al microservicio: ventas Error - "+ data.error;
-      }else{
-        showAlert("success", "Exito", "Vehiculos obtenidos correctamente");
-        this.listaVehiculos = data;
+        this.alertContent =
+          "Error al conectar al microservicio: ventas Error - " + data.error;
+      } else {
+        this.showAlert("success", "Exito", "Vehiculos obtenidos correctamente");
+
+        console.log("lista vehiculos", this.listaVehiculos);
       }
-      
     } catch (error) {
       console.log(error);
     }

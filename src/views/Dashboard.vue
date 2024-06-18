@@ -196,7 +196,7 @@
                 </div>
               </div>
               <reports-line-chart
-                v-if="listFuelProfit[0]>0"
+                v-if="listFuelProfit"
                 :key="chartKeyFuelProfit"
                 :chart="{
                   labels: listMonthFuelProfit,
@@ -270,7 +270,7 @@ export default {
   name: "dashboard-default",
   data() {
     return {
-      totalClientes: 0,
+      totalClientes: 1,
        
       arrayUsuarios: [],
       
@@ -316,7 +316,7 @@ export default {
   },
   async mounted() {
     try {
-      const res = await fetch("http://localhost:8090/graphql", {
+      const res = await fetch("http://34.176.196.5/graphql", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

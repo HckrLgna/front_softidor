@@ -289,7 +289,7 @@ export default {
   },
   async mounted() {
     try {
-      const res = await fetch("http://localhost:8090/graphql", {
+      const res = await fetch("http://34.176.196.5/graphql", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -322,7 +322,7 @@ export default {
     },
     async storePump() {
       try {
-        const res = await fetch("http://localhost:8090/graphql", {
+        const res = await fetch("http://34.176.196.5/graphql", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

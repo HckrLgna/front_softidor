@@ -55,7 +55,7 @@ export default createStore({
     async login({ commit }, user) {
       console.log(user);
       try {
-        const res = await fetch("http://localhost:8082/auth/login", {
+        const res = await fetch("http://3.147.85.14/auth/login", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -100,21 +100,19 @@ export default createStore({
     },
     async fetchFuels({ commit }) {
       try {
-        const body = JSON.stringify({
-          query:
-            "query ListarCombustibles{ getAllFuel{ id name sale_price measurement }}",
-        });
-        const res = await fetch("http://localhost:8090/api/combustible/all", {
+        const res = await fetch("http://34.176.196.5/graphiql", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
             Authorization: "Bearer " + localStorage.getItem("token"),
-            body: body,
+            body: JSON.stringify({
+              query:
+                "query ListarCombustibles{ getAllFuel{ id name sale_price measurement }}",
+            }),
           },
         });
         const data = await res.json();
         commit("setFuels", data);
-        console.log("desde vuex", data);
       } catch (error) {
         console.log(error);
       }

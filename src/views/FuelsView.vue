@@ -138,11 +138,11 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="arrayFuels in paginatedItems" :key="arrayFuels.id">
+                  <tr v-for="listFuels in paginatedItems" :key="listFuels.id">
                     <td>
                       <div class="d-flex px-2 py-1">
                         <div class="d-flex flex-column justify-content-center">
-                          <h6 class="mb-0 text-sm">{{ arrayFuels.name }}</h6>
+                          <h6 class="mb-0 text-sm">{{ listFuels.name }}</h6>
                           <p class="text-xs text-secondary mb-0">
                             {{}}
                           </p>
@@ -152,18 +152,18 @@
 
                     <td>
                       <p class="text-xs font-weight-bold mb-0">
-                        {{ arrayFuels.sale_price }}
+                        {{ listFuels.sale_price }}
                       </p>
                     </td>
 
                     <td class="align-middle text-center">
                       <span class="text-secondary text-xs font-weight-bold">{{
-                        arrayFuels.purchase_price
+                        listFuels.purchase_price
                       }}</span>
                     </td>
                     <td class="align-middle text-center">
                       <span class="text-secondary text-xs font-weight-bold">{{
-                        arrayFuels.measurement
+                        listFuels.measurement
                       }}</span>
                     </td>
 
@@ -219,7 +219,7 @@
 import MaterialButton from "@/components/MaterialButton.vue";
 import MaterialInput from "@/components/MaterialInput.vue";
 import MaterialAlert from "@/components/MaterialAlert.vue";
-import { mapActions, mapGetters } from "vuex";
+ 
 export default {
   name: "Fuels",
   components: {
@@ -229,6 +229,7 @@ export default {
   },
   data() {
     return {
+      listFuels: [],
       itemsPerPage: 5, // Número de elementos por página
       currentPage: 1, // Página actual
       newFuel: {
@@ -245,23 +246,56 @@ export default {
     };
   },
   created() {
-    this.fetchFuels();
+     
   },
   computed: {
     pageCount() {
-      return Math.ceil(this.arrayFuels.length / this.itemsPerPage);
+      return Math.ceil(this.listFuels.length / this.itemsPerPage);
     },
     paginatedItems() {
       const startIndex = (this.currentPage - 1) * this.itemsPerPage;
       const endIndex = startIndex + this.itemsPerPage;
-      return this.arrayFuels.slice(startIndex, endIndex);
+      return this.listFuels.slice(startIndex, endIndex);
     },
-    ...mapGetters(["getFuels"]),
-    arrayFuels() {
-      return this.getFuels;
-    },
+     
+     
   },
-  async mounted() {},
+  async mounted() {
+    try {
+        const res = await fetch("http://34.176.196.5/graphql", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+          //{"query": "mutation GuardarCombustible{ saveFuel(fuelDto : { name : \"Propano\", sale_price : 45.5, purchase_price: 87.41, measurement: \"Gal\" }) { id name sale_price purchase_price measurement }}"}
+          body: JSON.stringify({
+            query: "query ListarCombustibles{ getAllFuel{ id name sale_price purchase_price measurement }}",
+          }),
+        });
+        const data = await res.json();
+        console.log(data);
+        this.listFuels = data["data"]["getAllFuel"];
+        console.log(res);
+        if (this.listFuels.length > 0) {
+           
+          this.mostrarAlerta(
+            "Microservicio cargado correctamente",
+            "success",
+            "fas fa-check"
+          );
+           
+        } else {
+          this.mostrarAlerta(
+            "Error al guardar el registro",
+            "danger",
+            "fas fa-times"
+          );
+        }
+      } catch (error) {
+        console.log(error);
+      }
+  },
   methods: {
     nextPage() {
       if (this.currentPage < this.pageCount) {
@@ -275,7 +309,7 @@ export default {
     },
     async storeFuel() {
       try {
-        const res = await fetch("http://localhost:8090/graphql", {
+        const res = await fetch("http://34.176.196.5/graphql", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -325,7 +359,7 @@ export default {
         this.alertaVisible = false;
       }, 5000);
     },
-    ...mapActions(["fetchFuels"]),
+    
   },
 };
 </script>
