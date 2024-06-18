@@ -81,17 +81,17 @@
                     </td>
                     <td>
                       <p class="text-xs font-weight-bold mb-0">
-                        {{ ventaCombustible.fecha }}
+                        {{ ventaCombustible.date }}
                       </p>
                     </td>
                     <td class="align-middle text-center text-sm">
                       <span class="text-secondary text-xs font-weight-bold">{{
-                        ventaCombustible.precio
+                        ventaCombustible.price
                       }}</span>
                     </td>
                     <td class="align-middle text-center">
                       <span class="text-secondary text-xs font-weight-bold">{{
-                        ventaCombustible.cantidad
+                        ventaCombustible.quantity
                       }}</span>
                     </td>
                     <td class="align-middle">
@@ -110,13 +110,13 @@
                   <tr>
                     <td colspan="5" class="text-center">
                       <p class="text-secondary">
-                        No hay ventas de combustible disponible
+                        No hay ventas de productos disponible
                       </p>
                     </td>
                   </tr>
                 </tbody>
               </table>
-              <nav v-if="ventaCombustible.length > 0" class="p-3">
+              <nav v-if="ventaProductos.length > 0" class="p-3">
                 <button
                   @click="prevPage"
                   :disabled="currentPage === 1"
@@ -276,7 +276,7 @@
                     <th class="text-secondary opacity-7"></th>
                   </tr>
                 </thead>
-                <tbody v-if="ventaCombustible.length > 0">
+                <tbody v-if="ventaProductos.length > 0">
                   <tr
                     v-for="ventaProductos in paginatedItems"
                     :key="ventaProductos.id"
@@ -292,7 +292,7 @@
                         </div>
                         <div class="d-flex flex-column justify-content-center">
                           <h6 class="mb-0 text-sm">
-                            {{ ventaProductos.usuario_id }}
+                            {{ ventaProductos.user_id }}
                           </h6>
                           <span
                             :class="{
@@ -308,17 +308,17 @@
                     </td>
                     <td>
                       <p class="text-xs font-weight-bold mb-0">
-                        {{ ventaCombustible.fecha }}
+                        {{ ventaProductos.date }}
                       </p>
                     </td>
                     <td class="align-middle text-center text-sm">
                       <span class="text-secondary text-xs font-weight-bold">{{
-                        ventaCombustible.precio
+                        ventaCombustible.price
                       }}</span>
                     </td>
                     <td class="align-middle text-center">
                       <span class="text-secondary text-xs font-weight-bold">{{
-                        ventaCombustible.cantidad
+                        ventaProductos.totalPaid
                       }}</span>
                     </td>
                     <td class="align-middle">
@@ -343,7 +343,7 @@
                   </tr>
                 </tbody>
               </table>
-              <nav v-if="ventaCombustible.length > 0" class="p-3">
+              <nav v-if="ventaProductos.length > 0" class="p-3">
                 <button
                   @click="prevPage"
                   :disabled="currentPage === 1"
@@ -384,7 +384,7 @@ import MaterialAlert from "@/components/MaterialAlert.vue";
 export default {
   components: {
     MaterialButton,
-    MaterialAlert
+    MaterialAlert,
   },
   data() {
     return {
@@ -403,7 +403,6 @@ export default {
       alertColor: "success",
       alertIcono: "check",
       alertContent: "",
-
     };
   },
   computed: {
@@ -419,7 +418,7 @@ export default {
   async mounted() {
     try {
       const resCombustible = await fetch(
-        "http://127.0.0.1:5000/api/ventacombustibles",
+        "http://localhost:5000/api/fuel/getAllFuelSales",
         {
           method: "GET",
         }
@@ -429,22 +428,26 @@ export default {
       console.log(this.ventaCombustible);
 
       const resProducto = await fetch(
-        "http://127.0.0.1:5000/api/ventaproductos/",
+        "http://localhost:5000/api/product/getAllProductSales",
         {
           method: "GET",
         }
       );
-      if (resCombustible.status === 200) {
-          this.showAlert("success", "check", "Microservicio en linea");
+
+      const dataProducto = await resProducto.json();
+      console.log("dataProducto", dataProducto);
+      if (resProducto.status === 200) {
+        this.showAlert("success", "check", "Microservicio en linea");
+        this.ventaProductos = dataProducto;
+        console.log(this.ventaCombustible);
       } else {
         this.alertVisible = true;
         this.alertColor = "danger";
         this.alertIcono = "error";
-        this.alertContent = "Error al conectar al microservicio: ventas Error - "+ resCombustible.status;
+        this.alertContent =
+          "Error al conectar al microservicio: ventas Error - " +
+          resCombustible.status;
       }
-      const dataProducto = await resProducto.json();
-      this.ventaProductos = dataProducto;
-      console.log(this.ventaCombustible);
     } catch (error) {
       console.log(error);
     }

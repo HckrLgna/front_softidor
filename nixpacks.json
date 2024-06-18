@@ -1,0 +1,12 @@
+{
+    "setup": {
+      "nodejs": "20.0",  
+      "npm": "9.6.4"       
+    },
+    "commands": {
+      "install": "npm ci", 
+      "build": "npm run build",
+      "start": "npm run serve" 
+    }
+  }
+  

@@ -9,6 +9,7 @@ import TanquesView from "@/views/TanquesView.vue";
 import PumpsView from "@/views/PumpsView.vue";
 import FuelsView from "@/views/FuelsView.vue";
 import Dashboard from "@/views/Dashboard.vue";
+import ProductsView from "@/views/ProductsView.vue";
 
 const routes = [
   {
@@ -26,6 +27,11 @@ const routes = [
         path: "/sales",
         name: "sales",
         component: SalesView,
+      },
+      {
+        path: "products",
+        name: "products",
+        component: ProductsView
       },
       {
         path: "/clients",

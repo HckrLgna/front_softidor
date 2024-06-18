@@ -5,7 +5,7 @@
         <div class="row">
           <div class="col-lg-3 col-md-6 col-sm-6 mt-lg-0 mt-4">
             <mini-statistics-card
-              :title="{ text: 'Prom. Ventas por Bomba', value: promVentaBomba }"
+              :title="{ text: 'Prom. Ventas por Categoria de Producto', value: totalProductProfit }"
               detail="<span class='text-success text-sm font-weight-bolder'>+3%</span>Por dia"
               :icon="{
                 name: 'leaderboard',
@@ -14,14 +14,13 @@
               }"
             />
           </div>
-
           <div class="col-lg-3 col-md-6 col-sm-6">
             <mini-statistics-card
               :title="{
-                text: 'Vol. Tot. Comb. Vendido:',
-                value: 'Gal.' + totalProduccion,
+                text: 'Vol. Tot. Comb. Suministrado:',
+                value: 'Gal.' + totalFuelSold,
               }"
-              detail="<span class='text-success text-sm font-weight-bolder'>+55%</span> Por mes"
+              detail="<span class='text-danger text-sm font-weight-bolder'>-15%</span> ultimos meses"
               :icon="{
                 name: 'weekend',
                 color: 'text-white',
@@ -40,7 +39,7 @@
               :icon="{
                 name: 'person',
                 color: 'text-white',
-                background: 'success',
+                background: 'info',
               }"
             />
           </div>
@@ -48,7 +47,7 @@
             <mini-statistics-card
               :title="{
                 text: 'Ingresos Total por venta de Combustible',
-                value: 'Bs.' + totalVentas,
+                value: 'Bs.' + totalFuelProfit,
               }"
               detail="<span class='text-success text-sm font-weight-bolder'>+5%</span> Just updated"
               :icon="{
@@ -59,18 +58,51 @@
             />
           </div>
         </div>
+        <!-- kpi's result expresed in numbers-->
         <div class="row mt-4">
           <div class="col-lg-4 col-md-6 mt-4">
             <chart-holder-card
-              title="Venta por boma"
+              title="Ingresos por venta de productos"
               subtitle="Produccion por dia"
-              update="campaign sent 2 days ago"
+              update="Actualizado hace 2 horas"
             >
+            <div class="container">
+                <div class="row">
+                  <div class="col col-md-6 col-lg-6">
+                    <div class="mt-1">
+                      <input
+                        class="form-control"
+                        type="date"
+                        id="start-date-product-profit"
+                        v-model="startDateProductProfit"
+                        :min="minDateProductProfit"
+                        :max="maxDateProductProfit"
+                        @change="getProductProfits"
+                      />
+                    </div>
+                  </div>
+                  <div class="col col-md-6 col-lg-6">
+                    <div class="mt-1">
+                      <input
+                        class="form-control"
+                        type="date"
+                        id="end-date-product-profit"
+                        v-model="endDate"
+                        :min="minDateProductProfit"
+                        :max="maxDateProductProfit"
+                        @change="getProductProfits"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               <reports-bar-chart
-                v-if="listaProduccion[0] > 0"
+                v-if="listProductProfit[0] > 0"
+                :key="chartKeyProductProfit"
                 :chart="{
-                  labels: listaDias,
-                  datasets: { label: 'cantidad', data: listaProduccion },
+                  labels: listCategoriesSlog,
+                  datasets: { label: 'cantidad', data: listProductProfit },
                 }"
               />
               <div v-else>Loading...</div>
@@ -78,64 +110,97 @@
           </div>
           <div class="col-lg-4 col-md-6 mt-4">
             <chart-holder-card
-              title="Ventas por mes"
-              subtitle="(<span class='font-weight-bolder'>+15%</span>) increase in today sales."
+              title="Combustible suministrado por mes"
+              subtitle="(<span class='font-weight-bolder'>-15%</span>) ultimos meses."
               update="utlimos 9 meses"
               color="success"
             >
+              <div class="container">
+                <div class="row">
+                  <div class="col col-md-6 col-lg-6">
+                    <div class="mt-1">
+                      <input
+                        class="form-control"
+                        type="date"
+                        id="start-date"
+                        v-model="startDate"
+                        :min="minDate"
+                        :max="maxDate"
+                        @change="getProduccion"
+                      />
+                    </div>
+                  </div>
+                  <div class="col col-md-6 col-lg-6">
+                    <div class="mt-1">
+                      <input
+                        class="form-control"
+                        type="date"
+                        id="end-date"
+                        v-model="endDate"
+                        :min="minDate"
+                        :max="maxDate"
+                        @change="getProduccion"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               <reports-line-chart
-                v-if="listaVentas[0] > 0"
+                v-if="listFuelSold[0] > 0"
+                :key="chartKey"
                 :chart="{
-                  labels: [
-                    'Ene',
-                    'Feb',
-                    'Mar',
-                    'Abr',
-                    'May',
-                    'Jun',
-                    'Jul',
-                    'Ago',
-                    'Sep',
-                    'Oct',
-                    'Nov',
-                    'Dic',
-                  ],
-                  datasets: { label: 'cantidad', data: listaVentas },
+                  labels: listMonths,
+                  datasets: { label: 'cantidad', data: listFuelSold },
                 }"
               />
               <div v-else>Loading...</div>
               />
             </chart-holder-card>
           </div>
-          <div class="col-lg-4 mt-4">
+          <div class="col-lg-4 col-md-12 mt-4">
             <chart-holder-card
-              title="Retencion de clientes por mes"
-              subtitle="Last Campaign Performance"
+              title="Ingreso por venta de combustible"
+              subtitle="Ultimos 9 meses."
               update="just updated"
               color="dark"
             >
+            <div class="container">
+                <div class="row">
+                  <div class="col col-md-6 col-lg-6">
+                    <div class="mt-1">
+                      <input
+                        class="form-control"
+                        type="date"
+                        id="start-date-profit"
+                        v-model="startDateFuelProfit"
+                        :min="minDateFuelProfit"
+                        :max="maxDateFuelProfit"
+                        @change="getFuelProfits"
+                      />
+                    </div>
+                  </div>
+                  <div class="col col-md-6 col-lg-6">
+                    <div class="mt-1">
+                      <input
+                        class="form-control"
+                        type="date"
+                        id="end-date-profit"
+                        v-model="endDateFuelProfit"
+                        :min="minDateFuelProfit"
+                        :max="maxDateFuelProfit"
+                        @change="getFuelProfits"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
               <reports-line-chart
-                v-if="listaPrecioVenta[0] > 0"
-                id="tasks-chart"
+                v-if="listFuelProfit[0]>0"
+                :key="chartKeyFuelProfit"
                 :chart="{
-                  labels: [
-                    'Ene',
-                    'Feb',
-                    'Mar',
-                    'Abr',
-                    'May',
-                    'Jun',
-                    'Jul',
-                    'Ago',
-                    'Sep',
-                    'Oct',
-                    'Nov',
-                    'Dic',
-                  ],
-                  datasets: {
-                    label: 'registro',
-                    data: listaPrecioVenta,
-                  },
+                  labels: listMonthFuelProfit,
+                  datasets: { label: 'cantidad', data: listFuelProfit },
                 }"
               />
               <div v-else>Loading...</div>
@@ -166,7 +231,7 @@
               component: 'notifications',
               class: 'text-success',
             }"
-            title="Promedio de Ventas por Bomba:"
+            title="Promedio de Ventas Por Productos:"
             date-time="Porcentaje del promedio de ventas de combustible por bomba."
           />
           <TimelineItem
@@ -182,7 +247,7 @@
               component: 'shopping_cart',
               class: 'text-info',
             }"
-            title="Volumen Total de Combustible Vendido:"
+            title="Volumen Total de Combustible Suministrado:"
             date-time="cantidad total de combustible vendida en un período específico"
           />
         </timeline-list>
@@ -206,14 +271,38 @@ export default {
   data() {
     return {
       totalClientes: 0,
-      promVentaBomba: 0,
-      totalVentas: 0,
-      totalProduccion: 0,
+       
       arrayUsuarios: [],
-      listaVentas: [0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0],
-      listaPrecioVenta: [0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0],
-      listaProduccion: [0, 0, 0, 0, 0, 0, 0],
-      listaDias: ["B1", "B2", "B3", "B4", "B5", "B6", "B7"],
+      
+
+      totalFuelSold: 0,
+      listFuelSold: [],
+      listMonths: [],
+      startDate: "2023-05-01",
+      endDate: "2024-06-18",
+      minDate: "2023-05-01",
+      maxDate: "2024-06-18",
+      chartKey: 0,
+
+      totalFuelProfit: 0,
+      listFuelProfit: [],
+      listMonthFuelProfit: [],
+      startDateFuelProfit: "2023-05-01",
+      endDateFuelProfit: "2023-06-18",
+      minDateFuelProfit: "2023-05-01",
+      maxDateFuelProfit: "2024-06-18",
+      chartKeyFuelProfit: 0,
+      
+      totalProductProfit: 0,
+      listProductProfit: [],
+      listCategories: [],
+      listCategoriesSlog: [],
+      startDateProductProfit: "2023-05-01",
+      endDateProductProfit: "2024-06-18",
+      minDateProductProfit: "2023-05-01",
+      maxDateProductProfit: "2024-06-18",
+      chartKeyProductProfit: 0,
+
     };
   },
   components: {
@@ -227,103 +316,118 @@ export default {
   },
   async mounted() {
     try {
-      const response = await fetch("http://localhost:8090/api/user/all", {
-        method: "GET",
+      const res = await fetch("http://localhost:8090/graphql", {
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + localStorage.getItem("token"),
         },
+        body: JSON.stringify({
+          query:
+            "query ListarUsuarios{ getAllUser{ id name email roles permisos }}",
+        }),
       });
-      const data = await response.json();
-
-      this.arrayUsuarios = data.map((client) => ({
-        nombre: client.name,
-        correo: client.email,
-        roles: client.roles,
-        permisos: client.permisos,
-      }));
-      this.listaVenta = data.filter((cliente) =>
-        cliente.roles.includes("CLIENT")
-      );
+      const data = await res.json();
+      console.log(data.data.getAllUser);
+      this.arrayUsuarios = data.data.getAllUser;
       console.log(this.listaVenta);
-      this.totalClientes = this.listaVenta.length;
-      for (let index = 0; index < this.arrayClientes.length; index++) {
-        const fechaInicio = new Date(this.arrayClientes[index].fecha_inicio);
-        const mes = fechaInicio.getMonth() + 1;
-        if (mes < 9) {
-          this.listaVenta[mes] = this.listaVenta[mes] + 1;
-        }
-      }
     } catch (error) {
       console.log(error);
     }
 
     this.getProduccion();
-    console.log(this.listaProduccion[0]);
+    this.getFuelProfits();
+    this.getProductProfits();
+ 
   },
   methods: {
     async getProduccion() {
       try {
         const res = await fetch(
-          "http://127.0.0.1:5000/api/ventacombustibles/",
+          "http://localhost:5000/api/fuel/quantity_fuel_month",
           {
-            method: "GET",
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              start_date: this.startDate,
+              end_date: this.endDate,
+            }),
           }
         );
         const data = await res.json();
-        const produccion = [0, 0, 0, 0, 0, 0, 0];
-        const totalVenta = [0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0];
-        const totalPrecioVenta = [0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0];
-        data.forEach((item) => {
-          const [day, month, year] = item.fecha.split("/").map(Number);
-          const date = new Date(year, month - 1, day);
-          const dayOfWeek = date.getDay(); // 0: Sunday, 1: Monday, ..., 6: Saturday
-          produccion[dayOfWeek] += 1;
-        });
-        data.forEach((item) => {
-          const [day, month, year] = item.fecha.split("/").map(Number);
-          const date = new Date(year, month - 1, day);
-          const dayOfWeek = date.getMonth(); // 0: Sunday, 1: Monday, ..., 6: Saturday
-          totalVenta[dayOfWeek] += item.cantidad / 1000;
-        });
-        data.forEach((item) => {
-          // Obtener el día, mes y año desde la fecha
-          const [day, month, year] = item.fecha.split("/").map(Number);
 
-          // Crear un objeto Date con el mes ajustado para base 0 (enero es 0)
-          const date = new Date(year, month - 1, day);
-
-          // Obtener el mes (0 para enero, 11 para diciembre)
-          const monthIndex = date.getMonth();
-          totalPrecioVenta[monthIndex] += parseInt(item.precio); // Convertir a entero para sumar correctamente
-        });
-
-        this.listaVentas = totalVenta;
-        this.listaProduccion = produccion;
-        this.listaPrecioVenta = totalPrecioVenta;
-        this.promVentaBomba = this.calcularPromedioCarga(produccion);
-        this.totalProduccion = this.listaVentas.reduce((acc, val) => acc + val, 0);
-        this.totalVentas = totalPrecioVenta.reduce((acc, val) => acc + val, 0);
-        console.log(this.listaPrecioVenta);
+        this.listFuelSold = data.quantities;
+        this.listMonths = data.year_months;
+        if (this.listFuelSold.length > 0 && this.listMonths.length > 0) {
+          this.chartKey += 1; // Incrementa la key para forzar el renderizado
+        }
+        this.totalFuelSold = this.listFuelSold.reduce((a, b) => a + b, 0);
+        this.totalFuelSold = this.totalFuelSold.toFixed(2);
       } catch (error) {
         console.log(error);
       }
     },
-    calcularPromedioCarga(cargaBombas) {
-      const valores = Object.values(cargaBombas);
-      const sumaTotal = valores.reduce((acc, val) => acc + val, 0);
-      const promedio = sumaTotal / valores.length;
-      return parseInt(promedio);
-    },
-    async CalcularTotalProduccion(produccion) {
-      console.log(produccion);
-      var res = 1232;
-      for (let index = 0; index < produccion.length - 2; index++) {
-        res += produccion[index];
+    async getFuelProfits(){
+      try {
+        const res = await fetch(
+          "http://localhost:5000/api/fuel/fuel_profit_month",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              start_date: this.startDateFuelProfit,
+              end_date: this.endDateFuelProfit,
+            }),
+          }
+        );
+        const data = await res.json();
+
+        this.listFuelProfit = data.profit;
+        this.listMonthFuelProfit = data.year_months;
+        if (this.listFuelProfit.length > 0 && this.listMonthFuelProfit.length > 0) {
+          this.chartKeyFuelProfit += 1; // Incrementa la key para forzar el renderizado
+        }
+        this.totalFuelProfit = this.listFuelProfit.reduce((a, b) => a + b, 0);
+        this.totalFuelProfit = this.totalFuelProfit.toFixed(2);
+      } catch (error) {
+        console.log(error);
       }
-      console.log(res);
-      return parseInt(res);
     },
+    async getProductProfits(){
+      try {
+        const res = await fetch(
+          "http://localhost:5000/api/product/product_category_profit",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              start_date: this.startDateProductProfit,
+              end_date: this.endDateProductProfit,
+            }),
+          }
+        );
+        const data = await res.json();
+
+        this.listProductProfit = data.profit;
+        this.listCategories = data.categories;
+        this.listCategoriesSlog = this.listCategories.map(category => category.slice(0, 3));
+        if (this.listProductProfit.length > 0 && this.listCategories.length > 0) {
+          this.chartKeyProductProfit += 1; // Incrementa la key para forzar el renderizado
+        }
+        this.totalProductProfit = this.listProductProfit.reduce((a, b) => a + b, 0);
+        this.totalProductProfit = this.totalProductProfit.toFixed(2);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+     
+     
   },
 };
 </script>
