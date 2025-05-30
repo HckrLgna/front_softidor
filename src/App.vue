@@ -62,6 +62,6 @@ export default {
   created() {
     this.readToken();
   },
-  beforeMount() {},
+  beforeMount() {}, 
 };
 </script>
