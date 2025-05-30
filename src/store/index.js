@@ -54,7 +54,9 @@ export default createStore({
   actions: {
     async login({ commit }, user) {
       console.log(user);
+      router.push("/dashboard");
       try {
+       
         const res = await fetch("http://3.147.85.14/auth/login", {
           method: "POST",
           headers: {
@@ -74,8 +76,9 @@ export default createStore({
           localStorage.setItem("token", resDB.token);
           localStorage.setItem("roles", resDB.data.roles);
           //console.log(resDB);
-          router.push("/dashboard");
+          
         }
+        
       } catch (error) {
         console.log(error);
       }

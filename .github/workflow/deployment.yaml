@@ -1,0 +1,13 @@
+name: "deployment workflow"
+
+on:
+  push:
+    branches: ["main"]
+  jobs: 
+    deploy-frontend: 
+    runs-on: ubuntu-latest
+    steps: 
+      - run: echo "pull to code"
+      - run: echo "run migration"
+      - run: echo "build binaries"
+      - run: echo "deploy to server"
